@@ -4,20 +4,16 @@ import eu.busz.codurance.model.command.Command;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
-
-import static java.util.Optional.empty;
 
 @RequiredArgsConstructor
-public class ConsoleInputHandler {
+public class CommandExecutor {
 
     private final List<Command> commands;
 
-    public Optional<String> executeCommand(String line) {
-        return commands.stream()
+    public void executeCommand(String line) {
+        commands.stream()
                 .filter(cmd -> cmd.isMatchingCommand(line))
                 .findFirst()
-                .map(cmd -> cmd.executeCommand(line))
-                .orElse(empty());
+                .ifPresent(cmd -> cmd.executeCommand(line));
     }
 }

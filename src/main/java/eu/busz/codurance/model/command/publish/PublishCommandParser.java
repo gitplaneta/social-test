@@ -1,4 +1,4 @@
-package eu.busz.codurance.model.command.post;
+package eu.busz.codurance.model.command.publish;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

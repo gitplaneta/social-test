@@ -1,11 +1,11 @@
-package eu.busz.codurance.publish;
+package eu.busz.codurance.publishing;
 
-import eu.busz.codurance.model.Console;
-import eu.busz.codurance.model.ConsoleInputHandler;
+import eu.busz.codurance.model.CommandExecutor;
 import eu.busz.codurance.model.command.Command;
-import eu.busz.codurance.model.command.post.PublishCommand;
-import eu.busz.codurance.model.command.post.PublishCommandParser;
-import eu.busz.codurance.model.memory.InMemoryMessageRepository;
+import eu.busz.codurance.model.command.publish.PublishCommand;
+import eu.busz.codurance.model.command.publish.PublishCommandParser;
+import eu.busz.codurance.model.console.ConsoleReader;
+import eu.busz.codurance.persistence.memory.InMemoryMessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +23,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class MessagePublishingTest {
 
-    private static final String CORRECT_PUBLISH_MESSAGE = "Alice -> I love the weather";
-    private static final String INCORRECT_PUBLISH_MESSAGE = "Bob follow Charles";
+    private static final String CORRECT_PUBLISH_COMMAND = "Alice -> I love the weather";
+    private static final String INCORRECT_PUBLISH_COMMAND = "Bob follow Charles";
     @Mock
     private InMemoryMessageRepository postRepository;
     private Command publishCommand;
@@ -37,14 +37,14 @@ public class MessagePublishingTest {
     @Test
     public void passCommandAsInputThenCheckIfPostCommandMatches() {
         assertThat("Post command should match message",
-                publishCommand.isMatchingCommand(CORRECT_PUBLISH_MESSAGE), is(true));
+                publishCommand.isMatchingCommand(CORRECT_PUBLISH_COMMAND), is(true));
         assertThat("Post command should not match message",
-                publishCommand.isMatchingCommand(INCORRECT_PUBLISH_MESSAGE), is(false));
+                publishCommand.isMatchingCommand(INCORRECT_PUBLISH_COMMAND), is(false));
     }
 
     @Test
     public void passCommandAsInputThenCheckIfMessageIsSaved() {
-        publishCommand.executeCommand(CORRECT_PUBLISH_MESSAGE);
+        publishCommand.executeCommand(CORRECT_PUBLISH_COMMAND);
 
         verify(postRepository).saveMessage(eq("Alice"), eq("I love the weather"));
     }
@@ -52,10 +52,10 @@ public class MessagePublishingTest {
     @Test
     public void publishMessageViaConsoleThenCheckIfMessageWasSaved() {
         List<Command> commands = asList(new PublishCommand(new PublishCommandParser(), postRepository));
-        ConsoleInputHandler consoleInputHandler = new ConsoleInputHandler(commands);
-        Console console = new Console(consoleInputHandler);
+        CommandExecutor consoleInputHandler = new CommandExecutor(commands);
+        ConsoleReader consoleReader = new ConsoleReader(consoleInputHandler);
 
-        console.writeLine(CORRECT_PUBLISH_MESSAGE);
+        consoleReader.readLine(CORRECT_PUBLISH_COMMAND);
 
         verify(postRepository).saveMessage(eq("Alice"), eq("I love the weather"));
     }

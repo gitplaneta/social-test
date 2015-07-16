@@ -23,5 +23,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.google.guiceberry:guiceberry:3.3.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.google.guava:guava-testlib:14.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.truth0:truth:0.10" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
   </component>
 </module>
