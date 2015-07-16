@@ -16,10 +16,12 @@ public class MessagePrinter {
     private final Clock clock;
 
     public void print(List<Message> messagesToPrint) {
-        messagesToPrint.forEach(message -> {
-            String duration = clock.wordedTimeDurationSince(message.getDate());
-            console.printLine(formatMessage(message.getText(), duration));
-        });
+        messagesToPrint.stream()
+                .sorted((msg1, msg2) -> msg1.getDate().compareTo(msg2.getDate()) * -1)
+                .forEach(message -> {
+                    String duration = clock.wordedTimeDurationSince(message.getDate());
+                    console.printLine(formatMessage(message.getText(), duration));
+                });
     }
 
     private String formatMessage(String text, String duration) {

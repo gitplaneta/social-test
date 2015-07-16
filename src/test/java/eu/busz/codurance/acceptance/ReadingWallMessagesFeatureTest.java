@@ -76,8 +76,8 @@ public class ReadingWallMessagesFeatureTest {
 
         InOrder inOrder = inOrder(consolePrinter);
         inOrder.verify(consolePrinter).printLine(I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)");
-        inOrder.verify(consolePrinter).printLine(DAMN_WE_LOST + " (2 minutes ago)");
         inOrder.verify(consolePrinter).printLine(GOOD_GAME_THOUGH + " (1 minute ago)");
+        inOrder.verify(consolePrinter).printLine(DAMN_WE_LOST + " (2 minutes ago)");
     }
 
     private LocalDateTime getTestEndDateTime() {
