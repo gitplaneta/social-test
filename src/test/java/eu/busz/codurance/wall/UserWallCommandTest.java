@@ -39,11 +39,10 @@ public class UserWallCommandTest {
     private MessageRepository messageRepository;
     @Mock
     private Clock clock;
-    private MessagePrinter messagePrinter;
 
     @Before
     public void setUp() {
-        messagePrinter = new MessagePrinter(consolePrinter, clock);
+        MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
         wallCommand = new UserWallCommand(new UserWallCommandParser(), messageRepository, messagePrinter);
     }
 

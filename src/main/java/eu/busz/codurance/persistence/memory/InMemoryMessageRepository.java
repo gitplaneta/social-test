@@ -52,7 +52,7 @@ public class InMemoryMessageRepository implements MessageRepository {
         if (userFollowings != null) {
             wallMessages.addAll(userFollowings.stream()
                     .map(following -> getMessagesByUserName(following.getTargetUserNamed()))
-                    .flatMap(messages -> messages.stream())
+                    .flatMap(Collection::stream)
                     .collect(toList()));
         }
         return wallMessages;

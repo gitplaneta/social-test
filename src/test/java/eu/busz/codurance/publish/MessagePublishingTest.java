@@ -14,7 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
@@ -52,7 +52,7 @@ public class MessagePublishingTest {
 
     @Test
     public void publishMessageViaConsoleThenCheckIfMessageWasSaved() {
-        List<Command> commands = asList(new PublishCommand(new PublishCommandParser(), postRepository));
+        List<Command> commands = singletonList(new PublishCommand(new PublishCommandParser(), postRepository));
         CommandExecutor consoleInputHandler = new CommandExecutor(commands);
         ConsoleReader consoleReader = new ConsoleReader(consoleInputHandler);
 

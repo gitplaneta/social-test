@@ -13,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -40,7 +40,7 @@ public class MessagePrintingTest {
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clockMock);
         given(clockMock.wordedTimeDurationSince(any())).willReturn("5 minutes");
 
-        messagePrinter.printUserMessages(asList(Message.builder()
+        messagePrinter.printUserMessages(singletonList(Message.builder()
                         .userName("Alice")
                         .text(I_LOVE_THE_WEATHER_TODAY)
                         .date(ANY_DATE)
@@ -67,7 +67,7 @@ public class MessagePrintingTest {
         Clock clock = new Clock(clockAfterTenHoursFiveMinutes);
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
 
-        messagePrinter.printUserMessages(asList(Message.builder()
+        messagePrinter.printUserMessages(singletonList(Message.builder()
                         .userName("Bob")
                         .text(GOOD_GAME_THOUGH)
                         .date(postingTime)
@@ -84,11 +84,11 @@ public class MessagePrintingTest {
         Clock clock = new Clock(clockAfterTenHoursFiveMinutes);
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
 
-        messagePrinter.printWallMessages(asList(Message.builder()
-                .userName("Bob")
-                .text(GOOD_GAME_THOUGH)
-                .date(postingTime)
-                .build())
+        messagePrinter.printWallMessages(singletonList(Message.builder()
+                        .userName("Bob")
+                        .text(GOOD_GAME_THOUGH)
+                        .date(postingTime)
+                        .build())
         );
 
         verify(consolePrinter).printLine("Bob - " + GOOD_GAME_THOUGH + " (10 hours 5 minutes ago)");

@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -39,19 +40,18 @@ public class ReadUsersMessagesTest {
     private InMemoryMessageRepository repository;
     @Mock
     private Clock clock;
-    private MessagePrinter messagePrinter;
     private ReadUserMessageCommand readUserMessageCommand;
 
     @Before
     public void setUp() {
-        messagePrinter = new MessagePrinter(console, clock);
+        MessagePrinter messagePrinter = new MessagePrinter(console, clock);
         readUserMessageCommand = new ReadUserMessageCommand(new ReadUserMessageCommandParser(), repository, messagePrinter);
     }
 
     @Test
     public void readsSingleMessageFromRepositoryThenPrintsIt() {
         when(repository.getMessagesByUserName(eq("Alice"))).thenReturn(
-                asList(Message.builder()
+                singletonList(Message.builder()
                         .userName("Alice")
                         .text(I_LOVE_THE_WEATHER_TODAY)
                         .date(ANY_DATE_TIME).build())

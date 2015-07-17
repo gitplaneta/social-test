@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 public class PublishCommandParser {
 
-    private final String POST_MESSAGE_PATTERN = "(\\w+) -> (.+)";
+    private final static String POST_MESSAGE_PATTERN = "(\\w+) -> (.+)";
     private final Pattern pattern;
 
     public PublishCommandParser() {
