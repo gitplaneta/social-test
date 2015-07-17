@@ -18,13 +18,15 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MessagePrintingTest {
 
     private static final LocalDateTime ANY_DATE = null;
+    private static final String GOOD_GAME_THOUGH = "Good game though.";
+    private static final String I_LOVE_THE_WEATHER_TODAY = "I love the weather today";
+    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2000, 12, 12, 0, 0);
 
     @Mock
     private ConsolePrinter consolePrinter;
@@ -34,23 +36,23 @@ public class MessagePrintingTest {
     private java.time.Clock javaClockMock;
 
     @Test
-    public void printTextAndMockedTimeElapsedSincePosted() {
+    public void printUserMessageTextAndMockedTimeElapsedSincePosted() {
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clockMock);
         given(clockMock.wordedTimeDurationSince(any())).willReturn("5 minutes");
 
-        messagePrinter.print(asList(Message.builder()
+        messagePrinter.printUserMessages(asList(Message.builder()
                         .userName("Alice")
-                        .text("I love the weather today")
+                        .text(I_LOVE_THE_WEATHER_TODAY)
                         .date(ANY_DATE)
                         .build())
         );
 
-        verify(consolePrinter).printLine(eq("I love the weather today (5 minutes ago)"));
+        verify(consolePrinter).printLine(I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)");
     }
 
     @Test
     public void clockCalculatesAndReturnsWordingDurationOfTime() {
-        LocalDateTime postingTime = LocalDateTime.now();
+        LocalDateTime postingTime = DATE_TIME;
         java.time.Clock clockAfterFiveMinutes = getJavaClockWithAddedTime(postingTime, 0, 5);
         Clock clock = new Clock(clockAfterFiveMinutes);
 
@@ -59,20 +61,37 @@ public class MessagePrintingTest {
     }
 
     @Test
-    public void printTextAndTimeElapsedSincePosted() {
-        LocalDateTime postingTime = LocalDateTime.now();
+    public void printUserMessageTextAndTimeElapsedSincePosted() {
+        LocalDateTime postingTime = DATE_TIME;
         java.time.Clock clockAfterTenHoursFiveMinutes = getJavaClockWithAddedTime(postingTime, 10, 5);
         Clock clock = new Clock(clockAfterTenHoursFiveMinutes);
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
 
-        messagePrinter.print(asList(Message.builder()
+        messagePrinter.printUserMessages(asList(Message.builder()
                         .userName("Bob")
-                        .text("Good game though.")
+                        .text(GOOD_GAME_THOUGH)
                         .date(postingTime)
                         .build())
         );
 
-        verify(consolePrinter).printLine(eq("Good game though. (10 hours 5 minutes ago)"));
+        verify(consolePrinter).printLine(GOOD_GAME_THOUGH + " (10 hours 5 minutes ago)");
+    }
+
+    @Test
+    public void printUserWallMessagesWithTimeElapsedSincePosted() {
+        LocalDateTime postingTime = DATE_TIME;
+        java.time.Clock clockAfterTenHoursFiveMinutes = getJavaClockWithAddedTime(postingTime, 10, 5);
+        Clock clock = new Clock(clockAfterTenHoursFiveMinutes);
+        MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
+
+        messagePrinter.printWallMessages(asList(Message.builder()
+                .userName("Bob")
+                .text(GOOD_GAME_THOUGH)
+                .date(postingTime)
+                .build())
+        );
+
+        verify(consolePrinter).printLine("Bob - " + GOOD_GAME_THOUGH + " (10 hours 5 minutes ago)");
     }
 
     private java.time.Clock getJavaClockWithAddedTime(LocalDateTime currentTime, int hoursToAdd, int minutesToAdd) {

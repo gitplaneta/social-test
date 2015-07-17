@@ -3,7 +3,9 @@ package eu.busz.codurance.model.console;
 import eu.busz.codurance.model.CommandExecutor;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+import javax.inject.Inject;
+
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ConsoleReader {
 
     private final CommandExecutor commandExecutor;

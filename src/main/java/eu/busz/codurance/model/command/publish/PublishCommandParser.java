@@ -3,6 +3,8 @@ package eu.busz.codurance.model.command.publish;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 public class PublishCommandParser {
 
     private final String POST_MESSAGE_PATTERN = "(\\w+) -> (.+)";
@@ -21,11 +23,10 @@ public class PublishCommandParser {
         return getPatternGroup(command, 1);
     }
 
-    private String getPatternGroup(String string, int group) {
-        Matcher matcher = pattern.matcher(string);
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException();
-        }
+    private String getPatternGroup(String command, int group) {
+        Matcher matcher = pattern.matcher(command);
+        checkArgument(matcher.matches());
+
         return matcher.group(group);
     }
 

@@ -2,12 +2,13 @@ package eu.busz.codurance.model;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static org.apache.commons.lang3.time.DurationFormatUtils.formatDurationWords;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class Clock {
 
     private final java.time.Clock javaClock;

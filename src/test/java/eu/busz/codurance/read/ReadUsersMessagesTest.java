@@ -1,4 +1,4 @@
-package eu.busz.codurance.reading;
+package eu.busz.codurance.read;
 
 import eu.busz.codurance.model.Clock;
 import eu.busz.codurance.model.Message;
@@ -29,7 +29,9 @@ public class ReadUsersMessagesTest {
 
     private static final String CORRECT_PUBLISH_MESSAGE = "Alice";
     private static final String INCORRECT_PUBLISH_MESSAGE = "Bob follow Charles";
-    private static final LocalDateTime ANY_DATE_TIME = LocalDateTime.now();
+    private static final LocalDateTime ANY_DATE_TIME = LocalDateTime.of(1970, 12, 12, 0, 0);
+    private static final String I_LOVE_THE_WEATHER_TODAY = "I love the weather today";
+    private static final String GONNA_GO_SHOPPING = "Gonna go shopping";
 
     @Mock
     private ConsolePrinter console;
@@ -51,25 +53,25 @@ public class ReadUsersMessagesTest {
         when(repository.getMessagesByUserName(eq("Alice"))).thenReturn(
                 asList(Message.builder()
                         .userName("Alice")
-                        .text("I love the weather today")
+                        .text(I_LOVE_THE_WEATHER_TODAY)
                         .date(ANY_DATE_TIME).build())
         );
         when(clock.wordedTimeDurationSince(any())).thenReturn("5 minutes");
 
         readUserMessageCommand.executeCommand("Alice");
 
-        verify(console).printLine(eq("I love the weather today (5 minutes ago)"));
+        verify(console).printLine(eq(I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)"));
     }
 
     @Test
     public void readsMultipleMessagesFromRepositoryThenPrintsThem() {
         List<Message> messages = asList(Message.builder()
                         .userName("Alice")
-                        .text("I love the weather today")
+                        .text(I_LOVE_THE_WEATHER_TODAY)
                         .date(ANY_DATE_TIME).build(),
                 Message.builder()
                         .userName("Alice")
-                        .text("Gonna go shopping")
+                        .text(GONNA_GO_SHOPPING)
                         .date(ANY_DATE_TIME)
                         .build());
         when(repository.getMessagesByUserName(eq("Alice"))).thenReturn(messages);
@@ -77,8 +79,8 @@ public class ReadUsersMessagesTest {
 
         readUserMessageCommand.executeCommand("Alice");
 
-        verify(console).printLine("I love the weather today (5 minutes ago)");
-        verify(console).printLine("Gonna go shopping (6 minutes ago)");
+        verify(console).printLine(I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)");
+        verify(console).printLine(GONNA_GO_SHOPPING + " (6 minutes ago)");
     }
 
     @Test

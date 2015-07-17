@@ -6,9 +6,10 @@ import eu.busz.codurance.model.command.MessagePrinter;
 import eu.busz.codurance.persistence.memory.MessageRepository;
 import lombok.RequiredArgsConstructor;
 
+import javax.inject.Inject;
 import java.util.List;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ReadUserMessageCommand implements Command {
 
     private final ReadUserMessageCommandParser readUserMessageCommandParser;
@@ -28,6 +29,6 @@ public class ReadUserMessageCommand implements Command {
 
         String userName = readUserMessageCommandParser.extractUserName(command);
         List<Message> messagesToPrint = repository.getMessagesByUserName(userName);
-        messagePrinter.print(messagesToPrint);
+        messagePrinter.printUserMessages(messagesToPrint);
     }
 }

@@ -1,24 +1,20 @@
 package eu.busz.codurance.acceptance;
 
+import eu.busz.codurance.ConsoleReaderFactory;
 import eu.busz.codurance.model.Clock;
-import eu.busz.codurance.model.CommandExecutor;
-import eu.busz.codurance.model.command.MessagePrinter;
-import eu.busz.codurance.model.command.publish.PublishCommand;
-import eu.busz.codurance.model.command.publish.PublishCommandParser;
-import eu.busz.codurance.model.command.read.ReadUserMessageCommand;
-import eu.busz.codurance.model.command.read.ReadUserMessageCommandParser;
 import eu.busz.codurance.model.console.ConsolePrinter;
 import eu.busz.codurance.model.console.ConsoleReader;
-import eu.busz.codurance.persistence.memory.InMemoryMessageRepository;
-import eu.busz.codurance.persistence.memory.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.verify;
+import java.time.LocalDateTime;
+
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FollowingUserWallFeatureTest {
@@ -28,38 +24,55 @@ public class FollowingUserWallFeatureTest {
     private static final String DAMN_WE_LOST = "Damn! We lost!";
     private static final String I_M_IN_NEW_YORK_TODAY_ANYONE_WANT_TO_HAVE_A_COFFEE =
             "I'm in New York today! Anyone want to have a coffee?";
+    private static final java.time.Clock ANY_CLOCK = null;
+    private static final LocalDateTime ANY_DATE_TIME = null;
 
     @Mock
     private ConsolePrinter consolePrinter;
     @Mock
     private Clock clock;
     private ConsoleReader consoleReader;
+    private static final LocalDateTime CURRENT_DATE_TIME = LocalDateTime.of(2015, 7, 16, 22, 0);
 
     @Before
     public void setUp() {
-        MessageRepository messageRepository = new InMemoryMessageRepository(clock);
-        PublishCommand publishCommand = new PublishCommand(new PublishCommandParser(), messageRepository);
-        ReadUserMessageCommand readCommand = new ReadUserMessageCommand(new ReadUserMessageCommandParser(), messageRepository,
-                new MessagePrinter(consolePrinter, clock));
-
-        consoleReader = new ConsoleReader(new CommandExecutor(asList(publishCommand, readCommand)));
+        clock = spy(new Clock(ANY_CLOCK));
+        consoleReader = ConsoleReaderFactory.create(clock, consolePrinter);
     }
 
     @Test
-    public void publish_messages_then_follow_one_user() {
+    public void publishMessagesThenFollowOneUser() {
+        doReturn(ANY_DATE_TIME).when(clock).getCurrentDateTime();
+        given(clock.getCurrentDateTime()).willReturn(
+                CURRENT_DATE_TIME.minusMinutes(5),
+                CURRENT_DATE_TIME.minusSeconds(2),
+                CURRENT_DATE_TIME,
+                CURRENT_DATE_TIME
+        );
+
         consoleReader.readLine("Alice -> " + I_LOVE_THE_WEATHER_TODAY);
         consoleReader.readLine("Charlie -> " + I_M_IN_NEW_YORK_TODAY_ANYONE_WANT_TO_HAVE_A_COFFEE);
 
         consoleReader.readLine("Charlie follows Alice");
         consoleReader.readLine("Charlie wall");
 
-        verify(consolePrinter).printLine("Charlie - " + I_M_IN_NEW_YORK_TODAY_ANYONE_WANT_TO_HAVE_A_COFFEE +
-                "(2 seconds ago)");
-        verify(consolePrinter).printLine("Alice - " + I_LOVE_THE_WEATHER_TODAY + "(5 minutes ago)");
+        InOrder inOrder = inOrder(consolePrinter);
+        inOrder.verify(consolePrinter).printLine("Charlie - " + I_M_IN_NEW_YORK_TODAY_ANYONE_WANT_TO_HAVE_A_COFFEE +
+                " (2 seconds ago)");
+        inOrder.verify(consolePrinter).printLine("Alice - " + I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)");
     }
 
     @Test
-    public void publish_messages_then_follow_multiple_users() {
+    public void publishMessagesThenFollowMultipleUsers() {
+        doReturn(ANY_DATE_TIME).when(clock).getCurrentDateTime();
+        given(clock.getCurrentDateTime()).willReturn(
+                CURRENT_DATE_TIME.minusMinutes(5),
+                CURRENT_DATE_TIME.minusMinutes(2),
+                CURRENT_DATE_TIME.minusMinutes(1),
+                CURRENT_DATE_TIME.minusSeconds(15),
+                CURRENT_DATE_TIME
+        );
+
         consoleReader.readLine("Alice -> " + I_LOVE_THE_WEATHER_TODAY);
         consoleReader.readLine("Bob -> " + DAMN_WE_LOST);
         consoleReader.readLine("Bob -> " + GOOD_GAME_THOUGH);
@@ -70,9 +83,9 @@ public class FollowingUserWallFeatureTest {
         consoleReader.readLine("Charlie wall");
 
         verify(consolePrinter).printLine("Charlie - " + I_M_IN_NEW_YORK_TODAY_ANYONE_WANT_TO_HAVE_A_COFFEE +
-                "(15 seconds ago)");
-        verify(consolePrinter).printLine("Bob - " + DAMN_WE_LOST + "(1 minute ago)");
-        verify(consolePrinter).printLine("Bob - " + GOOD_GAME_THOUGH + "(2 minutes ago)");
-        verify(consolePrinter).printLine("Alice - " + I_LOVE_THE_WEATHER_TODAY + "(5 minutes ago)");
+                " (15 seconds ago)");
+        verify(consolePrinter).printLine("Bob - " + GOOD_GAME_THOUGH + " (1 minute ago)");
+        verify(consolePrinter).printLine("Bob - " + DAMN_WE_LOST + " (2 minutes ago)");
+        verify(consolePrinter).printLine("Alice - " + I_LOVE_THE_WEATHER_TODAY + " (5 minutes ago)");
     }
 }

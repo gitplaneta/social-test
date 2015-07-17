@@ -4,7 +4,9 @@ import eu.busz.codurance.model.command.Command;
 import eu.busz.codurance.persistence.memory.MessageRepository;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+import javax.inject.Inject;
+
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class PublishCommand implements Command {
 
     private final PublishCommandParser parser;
