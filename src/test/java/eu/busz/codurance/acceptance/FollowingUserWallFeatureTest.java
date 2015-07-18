@@ -1,6 +1,6 @@
 package eu.busz.codurance.acceptance;
 
-import eu.busz.codurance.ConsoleReaderFactory;
+import com.google.inject.Injector;
 import eu.busz.codurance.model.Clock;
 import eu.busz.codurance.model.console.ConsolePrinter;
 import eu.busz.codurance.model.console.ConsoleReader;
@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 
+import static eu.busz.codurance.guice.ApplicationTestModule.getInjector;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -37,7 +38,8 @@ public class FollowingUserWallFeatureTest {
     @Before
     public void setUp() {
         clock = spy(new Clock(ANY_CLOCK));
-        consoleReader = ConsoleReaderFactory.create(clock, consolePrinter);
+        Injector injector = getInjector(clock, consolePrinter);
+        consoleReader = injector.getInstance(ConsoleReader.class);
     }
 
     @Test
