@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReadingUsersMessagesFeatureTest {
+public class ReadingUserMessagesFeatureTest {
 
     private static final String I_LOVE_THE_WEATHER_TODAY = "I love the weather today";
     private static final String GOOD_GAME_THOUGH = "Good game though.";
@@ -39,7 +39,7 @@ public class ReadingUsersMessagesFeatureTest {
     }
 
     @Test
-    public void publishMessagesForTwoUsersThenReadMessagesViaWall() {
+    public void publishMessagesForTwoUsersThenReadMessagesForThoseUsers() {
         LocalDateTime currentTime = LocalDateTime.of(2015, 7, 16, 22, 0);
         doReturn(ANY_DATE_TIME).when(clock).getCurrentDateTime();
         given(clock.getCurrentDateTime()).willReturn(

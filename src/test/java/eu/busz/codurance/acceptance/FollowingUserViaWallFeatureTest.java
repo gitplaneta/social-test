@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FollowingUserWallFeatureTest {
+public class FollowingUserViaWallFeatureTest {
 
     private static final String I_LOVE_THE_WEATHER_TODAY = "I love the weather today";
     private static final String GOOD_GAME_THOUGH = "Good game though.";
@@ -43,7 +43,7 @@ public class FollowingUserWallFeatureTest {
     }
 
     @Test
-    public void publishMessagesThenFollowOneUser() {
+    public void publishMessagesThenFollowOneUserToVerifyIfSecondUsersWallDisplaysFirstUsersMessages() {
         doReturn(ANY_DATE_TIME).when(clock).getCurrentDateTime();
         given(clock.getCurrentDateTime()).willReturn(
                 CURRENT_DATE_TIME.minusMinutes(5),
@@ -65,7 +65,7 @@ public class FollowingUserWallFeatureTest {
     }
 
     @Test
-    public void publishMessagesThenFollowMultipleUsers() {
+    public void publishMessagesThenFollowMultipleUsersToVerifyIfWallFunctionDisplaysAllFollowedUsersMessages() {
         doReturn(ANY_DATE_TIME).when(clock).getCurrentDateTime();
         given(clock.getCurrentDateTime()).willReturn(
                 CURRENT_DATE_TIME.minusMinutes(5),

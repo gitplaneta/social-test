@@ -15,8 +15,7 @@ public class PublishCommandParser {
     }
 
     public boolean isMatching(String command) {
-        Matcher matcher = pattern.matcher(command);
-        return matcher.matches();
+        return pattern.matcher(command).matches();
     }
 
     public String extractName(String command) {

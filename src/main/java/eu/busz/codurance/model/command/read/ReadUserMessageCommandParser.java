@@ -1,6 +1,5 @@
 package eu.busz.codurance.model.command.read;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -15,8 +14,7 @@ public class ReadUserMessageCommandParser {
     }
 
     public boolean isMatching(String command) {
-        Matcher matcher = pattern.matcher(command);
-        return matcher.matches();
+        return pattern.matcher(command).matches();
     }
 
     public String extractUserName(String command) {

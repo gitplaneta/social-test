@@ -8,8 +8,8 @@ import eu.busz.codurance.model.command.follow.UserFollowingCommand;
 import eu.busz.codurance.model.command.publish.PublishCommand;
 import eu.busz.codurance.model.command.read.ReadUserMessageCommand;
 import eu.busz.codurance.model.command.wall.UserWallCommand;
-import eu.busz.codurance.persistence.memory.InMemoryMessageRepository;
-import eu.busz.codurance.persistence.memory.MessageRepository;
+import eu.busz.codurance.persistence.InMemoryMessageRepository;
+import eu.busz.codurance.persistence.MessageRepository;
 
 import java.time.Clock;
 

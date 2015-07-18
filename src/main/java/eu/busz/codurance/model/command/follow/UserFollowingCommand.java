@@ -1,7 +1,7 @@
 package eu.busz.codurance.model.command.follow;
 
 import eu.busz.codurance.model.command.Command;
-import eu.busz.codurance.persistence.memory.MessageRepository;
+import eu.busz.codurance.persistence.MessageRepository;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;

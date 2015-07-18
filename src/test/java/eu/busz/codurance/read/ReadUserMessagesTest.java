@@ -6,7 +6,7 @@ import eu.busz.codurance.model.command.MessagePrinter;
 import eu.busz.codurance.model.command.read.ReadUserMessageCommand;
 import eu.busz.codurance.model.command.read.ReadUserMessageCommandParser;
 import eu.busz.codurance.model.console.ConsolePrinter;
-import eu.busz.codurance.persistence.memory.InMemoryMessageRepository;
+import eu.busz.codurance.persistence.InMemoryMessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReadUsersMessagesTest {
+public class ReadUserMessagesTest {
 
     private static final String CORRECT_PUBLISH_MESSAGE = "Alice";
     private static final String INCORRECT_PUBLISH_MESSAGE = "Bob follow Charles";
@@ -45,12 +45,13 @@ public class ReadUsersMessagesTest {
     @Before
     public void setUp() {
         MessagePrinter messagePrinter = new MessagePrinter(console, clock);
-        readUserMessageCommand = new ReadUserMessageCommand(new ReadUserMessageCommandParser(), repository, messagePrinter);
+        readUserMessageCommand = new ReadUserMessageCommand(new ReadUserMessageCommandParser(),
+                repository, messagePrinter);
     }
 
     @Test
     public void readsSingleMessageFromRepositoryThenPrintsIt() {
-        when(repository.getMessagesByUserName(eq("Alice"))).thenReturn(
+        when(repository.getUserMessages(eq("Alice"))).thenReturn(
                 singletonList(Message.builder()
                         .userName("Alice")
                         .text(I_LOVE_THE_WEATHER_TODAY)
@@ -74,7 +75,7 @@ public class ReadUsersMessagesTest {
                         .text(GONNA_GO_SHOPPING)
                         .date(ANY_DATE_TIME)
                         .build());
-        when(repository.getMessagesByUserName(eq("Alice"))).thenReturn(messages);
+        when(repository.getUserMessages(eq("Alice"))).thenReturn(messages);
         when(clock.wordedTimeDurationSince(any())).thenReturn("5 minutes", "6 minutes");
 
         readUserMessageCommand.executeCommand("Alice");
@@ -84,7 +85,7 @@ public class ReadUsersMessagesTest {
     }
 
     @Test
-    public void checksIfCommandMatchingCorrectlyMatchesMessageReadCommand() {
+    public void readUserMessagesCommandMatchesReadUserMessagesSyntax() {
         assertThat("Post command should match message",
                 readUserMessageCommand.isMatchingCommand(CORRECT_PUBLISH_MESSAGE), is(true));
         assertThat("Post command should not match message",
@@ -94,7 +95,7 @@ public class ReadUsersMessagesTest {
     @Test
     public void executesReadingOfUserMessageThenChecksIfCorrectUserFetchedFromRepository() {
         readUserMessageCommand.executeCommand("Alice");
-        verify(repository).getMessagesByUserName("Alice");
+        verify(repository).getUserMessages("Alice");
     }
 
 

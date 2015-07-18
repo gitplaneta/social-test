@@ -3,7 +3,7 @@ package eu.busz.codurance.model.command.wall;
 import eu.busz.codurance.model.Message;
 import eu.busz.codurance.model.command.Command;
 import eu.busz.codurance.model.command.MessagePrinter;
-import eu.busz.codurance.persistence.memory.MessageRepository;
+import eu.busz.codurance.persistence.MessageRepository;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
@@ -24,7 +24,7 @@ public class UserWallCommand implements Command {
     @Override
     public void executeCommand(String command) {
         String userName = userWallCommandParser.extractUserName(command);
-        List<Message> wallMessages = messageRepository.getWallMessagesByUserName(userName);
+        List<Message> wallMessages = messageRepository.getUserWallMessages(userName);
         messagePrinter.printWallMessages(wallMessages);
 
     }

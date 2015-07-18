@@ -6,7 +6,7 @@ import eu.busz.codurance.model.command.MessagePrinter;
 import eu.busz.codurance.model.command.wall.UserWallCommand;
 import eu.busz.codurance.model.command.wall.UserWallCommandParser;
 import eu.busz.codurance.model.console.ConsolePrinter;
-import eu.busz.codurance.persistence.memory.MessageRepository;
+import eu.busz.codurance.persistence.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +69,7 @@ public class UserWallCommandTest {
                         .date(laterDate)
                         .build()
         );
-        given(messageRepository.getWallMessagesByUserName("Bob")).willReturn(messageList);
+        given(messageRepository.getUserWallMessages("Bob")).willReturn(messageList);
         given(clock.wordedTimeDurationSince(any())).willReturn("1 minute", "2 minutes");
 
         wallCommand.executeCommand("Bob wall");

@@ -5,7 +5,7 @@ import eu.busz.codurance.model.command.Command;
 import eu.busz.codurance.model.command.publish.PublishCommand;
 import eu.busz.codurance.model.command.publish.PublishCommandParser;
 import eu.busz.codurance.model.console.ConsoleReader;
-import eu.busz.codurance.persistence.memory.InMemoryMessageRepository;
+import eu.busz.codurance.persistence.InMemoryMessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,15 +36,15 @@ public class MessagePublishingTest {
     }
 
     @Test
-    public void passCommandAsInputThenCheckIfPostCommandMatches() {
-        assertThat("Post command should match message",
+    public void publishCommandMatchesPostCommandSyntax() {
+        assertThat("Publish command should match message",
                 publishCommand.isMatchingCommand(CORRECT_PUBLISH_COMMAND), is(true));
-        assertThat("Post command should not match message",
+        assertThat("Publish command should not match message",
                 publishCommand.isMatchingCommand(INCORRECT_PUBLISH_COMMAND), is(false));
     }
 
     @Test
-    public void passCommandAsInputThenCheckIfMessageIsSaved() {
+    public void executePublishCommandThenCheckIfMessageIsSaved() {
         publishCommand.executeCommand(CORRECT_PUBLISH_COMMAND);
 
         verify(postRepository).saveMessage(eq("Alice"), eq(I_LOVE_THE_WEATHER));

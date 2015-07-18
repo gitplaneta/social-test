@@ -1,4 +1,4 @@
-package eu.busz.codurance.persistence.memory;
+package eu.busz.codurance.persistence;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Singleton;
@@ -23,21 +23,18 @@ public class InMemoryMessageRepository implements MessageRepository {
 
     @Override
     public void saveMessage(String userName, String textMessage) {
-        List<Message> messages = new ArrayList<>();
-        if (messageRepository.containsKey(userName)) {
-            messages = messageRepository.get(userName);
-        }
+        List<Message> messages = messageRepository.getOrDefault(userName, new ArrayList<>());
 
         messages.add(Message.builder()
-                .text(textMessage)
                 .userName(userName)
+                .text(textMessage)
                 .date(clock.getCurrentDateTime())
                 .build());
         messageRepository.put(userName, messages);
     }
 
     @Override
-    public List<Message> getMessagesByUserName(String userName) {
+    public List<Message> getUserMessages(String userName) {
         if (messageRepository.get(userName) == null) {
             return emptyList();
         }
@@ -45,13 +42,13 @@ public class InMemoryMessageRepository implements MessageRepository {
     }
 
     @Override
-    public List<Message> getWallMessagesByUserName(String userName) {
-        List<Message> wallMessages = new ArrayList<>(getMessagesByUserName(userName));
+    public List<Message> getUserWallMessages(String userName) {
+        List<Message> wallMessages = new ArrayList<>(getUserMessages(userName));
         Set<Following> userFollowings = followingsRepository.get(userName);
 
         if (userFollowings != null) {
             wallMessages.addAll(userFollowings.stream()
-                    .map(following -> getMessagesByUserName(following.getTargetUserNamed()))
+                    .map(following -> getUserMessages(following.getTargetUserNamed()))
                     .flatMap(Collection::stream)
                     .collect(toList()));
         }

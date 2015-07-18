@@ -3,7 +3,7 @@ package eu.busz.codurance.follow;
 import eu.busz.codurance.model.command.follow.Following;
 import eu.busz.codurance.model.command.follow.UserFollowingCommand;
 import eu.busz.codurance.model.command.follow.UserFollowingCommandParser;
-import eu.busz.codurance.persistence.memory.MessageRepository;
+import eu.busz.codurance.persistence.MessageRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public class UserFollowingTest {
     }
 
     @Test
-    public void executeFollowingCommandThenCheckIfFollowingDataSavedInRepository() {
+    public void executeFollowingCommandThenCheckIfFollowingEventSavedInRepository() {
         Following following = Following.builder()
                 .sourceUserName("Alice")
                 .targetUserNamed("Charles")

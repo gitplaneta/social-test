@@ -36,7 +36,7 @@ public class MessagePrintingTest {
     private java.time.Clock javaClockMock;
 
     @Test
-    public void printUserMessageTextAndMockedTimeElapsedSincePosted() {
+    public void printUserMessageWithTimeElapsedSincePosted() {
         MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clockMock);
         given(clockMock.wordedTimeDurationSince(any())).willReturn("5 minutes");
 
@@ -51,7 +51,7 @@ public class MessagePrintingTest {
     }
 
     @Test
-    public void clockCalculatesAndReturnsWordingDurationOfTime() {
+    public void clockCalculatesAndReturnsWordedDurationOfTime() {
         LocalDateTime postingTime = DATE_TIME;
         java.time.Clock clockAfterFiveMinutes = getJavaClockWithAddedTime(postingTime, 0, 5);
         Clock clock = new Clock(clockAfterFiveMinutes);
@@ -61,24 +61,7 @@ public class MessagePrintingTest {
     }
 
     @Test
-    public void printUserMessageTextAndTimeElapsedSincePosted() {
-        LocalDateTime postingTime = DATE_TIME;
-        java.time.Clock clockAfterTenHoursFiveMinutes = getJavaClockWithAddedTime(postingTime, 10, 5);
-        Clock clock = new Clock(clockAfterTenHoursFiveMinutes);
-        MessagePrinter messagePrinter = new MessagePrinter(consolePrinter, clock);
-
-        messagePrinter.printUserMessages(singletonList(Message.builder()
-                        .userName("Bob")
-                        .text(GOOD_GAME_THOUGH)
-                        .date(postingTime)
-                        .build())
-        );
-
-        verify(consolePrinter).printLine(GOOD_GAME_THOUGH + " (10 hours 5 minutes ago)");
-    }
-
-    @Test
-    public void printUserWallMessagesWithTimeElapsedSincePosted() {
+    public void printUserWallMessageTogetherWithCalculatedDurationSincePosted() {
         LocalDateTime postingTime = DATE_TIME;
         java.time.Clock clockAfterTenHoursFiveMinutes = getJavaClockWithAddedTime(postingTime, 10, 5);
         Clock clock = new Clock(clockAfterTenHoursFiveMinutes);

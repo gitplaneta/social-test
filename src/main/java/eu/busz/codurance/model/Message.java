@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class Message {
-    private final String text;
     private final String userName;
+    private final String text;
     private final LocalDateTime date;
 }

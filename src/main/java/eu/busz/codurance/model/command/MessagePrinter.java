@@ -27,7 +27,6 @@ public class MessagePrinter {
 
     public void printWallMessages(List<Message> wallMessages) {
         printMessage(wallMessages, this::wallMessageFormat);
-
     }
 
     private void printMessage(List<Message> messages, BiFunction<Message, String, String> formatter) {
